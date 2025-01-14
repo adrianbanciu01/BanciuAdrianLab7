@@ -1,4 +1,4 @@
-using BanciuAdrianLab7.Models;
+﻿using BanciuAdrianLab7.Models;
 
 namespace BanciuAdrianLab7;
 
@@ -21,4 +21,35 @@ public partial class ListPage : ContentPage
         await App.Database.DeleteShopListAsync(slist);
         await Navigation.PopAsync();
     }
+
+    async void OnChooseButtonClicked(object sender, EventArgs e)
+    {
+        await Navigation.PushAsync(new ProductPage((ShopList)
+       this.BindingContext)
+        {
+            BindingContext = new Product()
+        });
+    }
+    protected override async void OnAppearing()
+    {
+        base.OnAppearing();
+        var shoplist = (ShopList)BindingContext;
+
+        listView.ItemsSource = await App.Database.GetListProductsAsync(shoplist.ID);
+    }
+    async void OnDeleteItemButtonClicked(object sender, EventArgs e)
+    {
+        var selectedItem = listView.SelectedItem as Product;
+        if (selectedItem != null)
+        {
+            await App.Database.DeleteProductAsync(selectedItem);
+
+            listView.ItemsSource = await App.Database.GetListProductsAsync(((ShopList)BindingContext).ID);
+        }
+        else
+        {
+            await DisplayAlert("Atenție", "Selectați un produs pentru a-l șterge.", "OK");
+        }
+    }
+
 }
