@@ -1,5 +1,5 @@
 namespace BanciuAdrianLab7;
-
+using BanciuAdrianLab7.Models;
 public partial class ProductPage : ContentPage
 {
 	public ProductPage()
